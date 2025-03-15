@@ -12,6 +12,37 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows','following_id', 'followed_id');
+    }
+
+    public function followed()
+    {
+
+        return $this->belongsToMany(User::class, 'follows','followed_id','following_id');
+
+    }
+
+
+    // やること１　中身の構造理解して書き直す
+    public function isFollowing($user)
+    {
+        return $this->following->contains($user);
+    }
+
+    public function getFollowingCountAttribute()
+    {
+        return $this->following()->count();
+    }
+
+    public function getFollowedCountAttribute()
+    {
+        return $this->followed()->count();
+    }
+
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,4 +63,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+
 }
