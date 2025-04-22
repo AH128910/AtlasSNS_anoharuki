@@ -35,26 +35,42 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'min:2', 'max:12', 'alpha_num'],
             'email' => ['required', 'email', 'min:5', 'max:40', 'unique:users,email'],
             'password' => ['required', 'min:8', 'max:20', 'confirmed',],
-            // 'username.required' => 'ユーザー名は必須です。',
-            // 'username.min' => 'ユーザー名は2文字以上必要です。',
-            // 'username.max' => 'ユーザー名は12文字以内で入力してください。',
-            // 'username.alpha_num' => 'ユーザー名は半角英数字のみです。',
-            // 'email.required' => 'メールアドレスは必須です。',
-            // 'email.email' => '正しいメールアドレス形式で入力してください。',
-            // 'email.min' => 'メールアドレスは5文字以上必要です。',
-            // 'email.max' => 'メールアドレスは40文字以内で入力してください。',
-            // 'email.unique' => 'このメールアドレスは既に登録されています。',
-            // 'password.required' => 'パスワードは必須です。',
-            // 'password.min' => 'パスワードは8文字以上必要です。',
-            // 'password.max' => 'パスワードは20文字以内で入力してください。',
-            // 'password.confirmed' => 'パスワードが一致しません。',
-        ]);
-        User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password_confirmation' => ['required', 'string', 'alpha_num', 'min:8', 'max:20', 'same:password'],
+            [ // ←こっちがカスタムエラーメッセージ
+            'username.required' => 'ユーザー名は必須です。',
+            'username.min' => 'ユーザー名は2文字以上必要です。',
+            'username.max' => 'ユーザー名は12文字以内で入力してください。',
+            'username.alpha_num' => 'ユーザー名は半角英数字のみです。',
 
+            'email.required' => 'メールアドレスは必須です。',
+            'email.email' => '正しいメールアドレス形式で入力してください。',
+            'email.min' => 'メールアドレスは5文字以上必要です。',
+            'email.max' => 'メールアドレスは40文字以内で入力してください。',
+            'email.unique' => 'このメールアドレスは既に登録されています。',
+
+            'password.required' => 'パスワードは必須です。',
+            'password.min' => 'パスワードは8文字以上必要です。',
+            'password.max' => 'パスワードは20文字以内で入力してください。',
+            'password.confirmed' => 'パスワードが一致しません。',
+
+            'password_confirmation.required' => 'パスワード確認は必須です。',
+            'password_confirmation.alpha_num' => 'パスワード確認は半角英数字のみです。',
+            'password_confirmation.same' => 'パスワード確認が一致しません。',
+            ]
         ]);
+
+        $randomIcon = 'icon' . rand(1, 7) . '.png';
+
+
+        $user = User::create([
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'icon_image' => $randomIcon,
+        ]);
+
+        // ログイン後のリダイレクトなど
+        Auth::login($user);
 
         $request->session()->put('key', $request->username);
 

@@ -1,63 +1,46 @@
 <x-login-layout>
-<!-- ログイン中のユーザー表示するデバック -->
-@if (Auth::check())
-    <p>ログイン中のユーザー: {{ Auth::user()->username }}</p>
-@else
-    <p>ログインしていません。</p>
-@endif
-
-
-
-
-@php
-    $iconNumber = Auth::user()->id % 7 + 1;
-@endphp
 
   <form action="{{ route('posts.store') }}" method="POST">
     @csrf
-    {{ Auth::id() }}
+    <!-- {{ Auth::id() }} -->
     <div class="post-form">
         {{-- ログインユーザーのアイコンを表示 --}}
-        <img src="{{ asset('images/icon' . $iconNumber . '.png') }}" alt="ユーザーアイコン" width="50">
+        <img src="{{ asset('images/' . Auth::user()->icon_image) }}" alt="ユーザーアイコン" width="50">
 
 
-        {{-- 投稿内容入力欄 --}}
-        <textarea name="post" placeholder="投稿内容を入力してください" required></textarea>
+        {{-- テキストエリア＋エラー表示のラッパー --}}
+        <div class="textarea-wrapper">
+            <textarea type="text" name="post" placeholder="投稿内容を入力してください" required></textarea>
+            @error('post')
+                <p class="error-message">{{ $message }}</p>
+            @enderror
+        </div>
 
         <button type="submit" style="border: none; background: none; padding: 0; cursor: pointer;">
-        <img src="{{ asset('images/post.png') }}" alt="投稿ボタン" width="30">
-    </button>
+          <img src="{{ asset('images/post.png') }}" alt="投稿ボタン" width="40">
+        </button>
+    </form>
 
-        @error('post')
-        <p style="color: red;">{{ $message }}</p>
-        @enderror
-</form>
-
-
-
-
-<!-- 非表示のフォーム -->
-<form id="post-form" action="{{ route('posts.store') }}" method="POST" style="display: none;">
+        <!-- 非表示のフォーム -->
+  <form id="post-form" action="{{ route('posts.store') }}" method="POST" style="display: none;">
     @csrf
-    <input type="hidden" name="post" id="hidden-post">
-</form>
+      <input type="hidden" name="post" id="hidden-post">
+  </form>
     </div>
   </form>
 
-  <hr style="border: 5px solid #ddd;">
+  <hr style="border: 5px solid #ddd; margin: 0;">
 
   @foreach ($posts as $post)
     <div class="post">
         {{-- ユーザー情報 --}}
-        @php
-            $iconNumber = $post->user->id % 7 + 1;
-        @endphp
-        <img src="{{ asset('images/icon' . $iconNumber . '.png') }}" alt="ユーザーアイコン" width="50">
 
-        <p>{{ $post->user->username }}</p>
+        <img src="{{ asset('images/' . $post->user->icon_image) }}" alt="ユーザーアイコン" width="50">
 
-        {{-- 投稿内容 --}}
-        <p>{{ $post->post }}</p>
+        <div class="post-content">
+          <p class="username">{{ $post->user->username }}</p>
+          <p>{{ $post->post }}</p>
+        </div>
         <p class="timestamp">{{ $post->created_at->format('Y-m-d H:i') }}</p>
 
         {{-- ログイン中のユーザーの投稿なら編集・削除ボタンを表示 --}}
@@ -76,9 +59,9 @@
 
                 {{-- 削除ボタン --}}
                 <a href="#" onclick="event.preventDefault(); deletePost({{ $post->id }});">
-                    <img src="{{ asset('images/trash.png') }}" alt="削除" width="30"
-                        onmouseover="this.src='{{ asset('images/trash-h.png') }}'"
-                        onmouseout="this.src='{{ asset('images/trash.png') }}'">
+                  <img src="{{ asset('images/trash.png') }}" alt="削除" width="30"
+                  onmouseover="this.src='{{ asset('images/trash-h.png') }}'"
+                  onmouseout="this.src='{{ asset('images/trash.png') }}'">
                 </a>
             </div>
         @endif
@@ -89,13 +72,13 @@
         {{-- ✅ モーダル（投稿編集） --}}
         <div id="editModal{{ $post->id }}" class="modal" style="display: none;">
             <div class="modal-content">
-                <span class="close" onclick="closeModal({{ $post->id }})">&times;</span>
-                <h3>投稿を編集</h3>
                 <form action="{{ route('posts.update', $post->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <textarea name="post" rows="3">{{ old('post', $post->post) }}</textarea>
-                    <button type="submit">更新</button>
+                    <button type="submit" class="update-button">
+                      <img src="{{ asset('images/edit.png') }}" alt="更新">
+                    </button>
                 </form>
             </div>
         </div>

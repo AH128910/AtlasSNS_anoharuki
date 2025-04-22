@@ -10,3 +10,23 @@ $(function () {
 
 
 });
+
+function openModal(id) {
+  const modal = document.getElementById(`editModal${id}`);
+  modal.style.visibility = 'visible';
+  modal.style.display = 'flex'; /* ここで表示される */
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(`editModal${id}`);
+  modal.style.visibility = 'hidden';
+  modal.style.display = 'none'; /* 非表示にする */
+}
+
+window.addEventListener('click', function (e) {
+  document.querySelectorAll('.modal').forEach(modal => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});

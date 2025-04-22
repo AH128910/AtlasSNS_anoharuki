@@ -1,29 +1,37 @@
 <x-login-layout>
 
   <div class="profile-container">
-    <p>ユーザー名 &nbsp; {{ $user->username }}</p> <!-- ユーザー名を表示 -->
-
-    <!-- 自己紹介文 -->
-    <p>自己紹介 &nbsp;  {{ $user->bio }}</p>
-
-    <div class="profile-details">
         <!-- ユーザーアイコン -->
-        <img src="{{ asset('images/icon' . ($user->id % 7 + 1) . '.png') }}" alt="{{ $user->username }}のアイコン" width="30" style="border-radius: 50%;">
-    </div>
-        @if (Auth::user()->isFollowing($user->id))
-          <form action="{{ route('followed', $user->id) }}" method="POST">
-          @csrf
-            <button type="submit">フォロー解除</button>
-          </form>
-        @else
-          <form action="{{ route('following', $user->id) }}" method="POST">
-          @csrf
-            <button type="submit">フォローする</button>
-          </form>
-        @endif
+        <img src="{{ asset('images/' . Auth::user()->icon_image) }}" alt="ユーザーアイコン" class="user-icon">
+
+        <div class="profile-info">
+          <div class="info-row">
+            <p>ユーザー名</p> <!-- ユーザー名を表示 -->
+            <p>{{ $user->username }}</p> <!-- ユーザー名を表示 -->
+          </div>
+          <!-- 自己紹介文 -->
+          <div class="info-row">
+            <p>自己紹介</p>
+            <p>{{ $user->bio }}</p>
+          </div>
+        </div>
+
+        <div class="profile-btn">
+          @if (Auth::user()->isFollowing($user->id))
+            <form action="{{ route('followed', $user->id) }}" method="POST">
+            @csrf
+              <button type="submit" class="follow-btn">フォロー解除</button>
+            </form>
+          @else
+            <form action="{{ route('following', $user->id) }}" method="POST">
+            @csrf
+              <button type="submit" class="following-btn">フォローする</button>
+            </form>
+          @endif
+        </div>
   </div>
 
-  <hr style="border: 5px solid #ddd;">
+  <hr style="border: 5px solid #ddd; margin: 0;">
 
   <div class="post-list">
     @if ($posts->isNotEmpty())
@@ -34,30 +42,23 @@
           @endphp
 
           <!-- ユーザーアイコン（クリックでプロフィールへ） -->
-          <img src="{{ asset('images/icon' . ($user->id % 7 + 1) . '.png') }}" alt="{{ $user->username }}のアイコン" width="30" style="border-radius: 50%;">
+          <img src="{{ asset('images/icon' . ($user->id % 7 + 1) . '.png') }}" alt="{{ $user->username }}のアイコン" width="50" style="border-radius: 50%;">
 
-          <!-- ユーザー名 -->
-          <p>{{ $post->user->username }}</p>
-
-          <!-- 投稿内容 -->
-          <p>{{ $post->post }}</p>
+          <div class="post-content">
+            <p class="username">{{ $post->user->username }}</p>
+            <p>{{ $post->post }}</p>
+          </div>
 
           <!-- 投稿日時 -->
-          <p>{{ $post->created_at->format('Y-m-d H:i') }}</p>
+          <p class="timestamp">{{ $post->created_at->format('Y-m-d H:i') }}</p>
 
           <!-- {{-- 投稿ごとの仕切り線 --}} -->
           <hr style="border: 1px solid #ddd;">
         </div>
       @endforeach
-    @else
-      <p>投稿がありません。</p>
-    @endif
+        @else
+        <p>投稿がありません。</p>
+      @endif
   </div>
-
-
-
-
-
-
 
 </x-login-layout>

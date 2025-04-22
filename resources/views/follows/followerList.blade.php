@@ -1,48 +1,43 @@
 <x-login-layout>
 
-<div class="follow-icons">
-  <h3>フォロワーリスト</h3>
-    <ul>
-        @foreach ($followed as $user)
-            @php
-                $iconNumber = ($user->id % 7) + 1;
-            @endphp
+<div class="follower-content">
+  <div class="follow-icons">
+    <h3>フォロワーリスト</h3>
+      <ul>
+          @foreach ($followed as $user)
+              <li style="display: inline-block; margin: 5px;">
+                <a href="{{ route('profiles.profile', ['user' => $user->id]) }}">
+                  <img src="{{ asset('images/' . $user->icon_image) }}" alt="{{ $user->username }}のアイコン" width="50" style="border-radius: 50%;">
+                </a>
+              </li>
+          @endforeach
+      </ul>
+  </div>
 
-            <li style="display: inline-block; margin: 5px;">
-              <a href="{{ route('profiles.profile', ['user' => $user->id]) }}">
-                <img src="{{ asset('images/icon' . $iconNumber . '.png') }}" alt="{{ $user->username }}のアイコン" width="50"  style="border-radius: 50%;">
-              </a>
-            </li>
-        @endforeach
-    </ul>
-</div>
-
-<hr style="border: 5px solid #ddd;">
+  <hr style="border: 5px solid #ddd;">
 
 <!-- {{-- フォロワーの投稿表示 --}} -->
-    <div class="post-list">
-        @foreach ($posts as $post)
-            <div class="post">
-                <!-- {{-- ユーザーアイコン --}} -->
-                @php
-                $iconNumber = $post->user->id % 7 + 1;
-                @endphp
-                  <a href="{{ route('profiles.profile', ['user' => $post->user->id]) }}">
-                    <img src="{{ asset('images/icon' . $iconNumber . '.png') }}" alt="ユーザーアイコン" width="50">
-                  </a>
-                <!-- {{-- ユーザー名 --}} -->
-                <p>{{ $post->user->username }}</p>
+  <div class="post-list">
+    @foreach ($posts as $post)
+      <div class="post">
+      <!-- {{-- ユーザーアイコン --}} -->
+        <a href="{{ route('profiles.profile', ['user' => $post->user->id]) }}">
+          <img src="{{ asset('images/' . $post->user->icon_image) }}" alt="ユーザーアイコン" width="50">
+        </a>
+        <!-- {{-- ユーザー名 --}} -->
+        <div class="post-content">
+          <p class="username">{{ $post->user->username }}</p>
+          <p>{{ $post->post }}</p>
+        </div>
 
-                <!-- {{-- 投稿内容 --}} -->
-                <p>{{ $post->post }}</p>
+        <!-- {{-- 投稿日時 --}} -->
+        <p class="timestamp">{{ $post->created_at->format('Y-m-d H:i') }}</p>
 
-                <!-- {{-- 投稿日時 --}} -->
-                <p>{{ $post->created_at->format('Y-m-d H:i') }}</p>
-
-                <!-- {{-- 投稿ごとの仕切り線 --}} -->
-                <hr style="border: 1px solid #ddd;">
-            </div>
-        @endforeach
+        <!-- {{-- 投稿ごとの仕切り線 --}} -->
+        <hr style="border: 1px solid #ddd;">
       </div>
+    @endforeach
+  </div>
+</div>
 
 </x-login-layout>
