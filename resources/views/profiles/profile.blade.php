@@ -2,7 +2,7 @@
 
   <div class="profile-container">
         <!-- ユーザーアイコン -->
-        <img src="{{ asset('images/' . Auth::user()->icon_image) }}" alt="ユーザーアイコン" class="user-icon">
+        <img src="{{ asset('images/' . $user->icon_image) }}" alt="{{ $user->username }}のアイコン" class="user-icon">
 
         <div class="profile-info">
           <div class="info-row">
@@ -37,12 +37,10 @@
     @if ($posts->isNotEmpty())
       @foreach ($posts as $post)
         <div class="post">
-          @php
-            $iconNumber = ($post->user->id % 7) + 1;
-          @endphp
 
           <!-- ユーザーアイコン（クリックでプロフィールへ） -->
-          <img src="{{ asset('images/icon' . ($user->id % 7 + 1) . '.png') }}" alt="{{ $user->username }}のアイコン" width="50" style="border-radius: 50%;">
+          <img src="{{ asset('images/' . $post->user->icon_image) }}" alt="{{ $post->user->username }}のアイコン" width="50" style="border-radius: 50%;">
+
 
           <div class="post-content">
             <p class="username">{{ $post->user->username }}</p>
