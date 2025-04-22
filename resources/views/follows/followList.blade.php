@@ -6,7 +6,7 @@
             @foreach ($followingUsers as $index => $user)
                 <li style="display: inline-block; margin: 5px;">
                     <a href="{{ route('profiles.profile', ['user' => $user->id]) }}">
-                        <img src="{{ asset('images/' . $user->icon_image) }}" alt="{{ $user->username }}のアイコン" width="50" style="border-radius: 50%;">
+                        <img src="{{ asset('images/' . $user->icon_image) }}" alt="{{ $user->username }}のアイコン" width="50" class="user-icon">
                     </a>
                 </li>
             @endforeach
@@ -21,7 +21,7 @@
           <div class="post">
                 <!-- {{-- ユーザーアイコン --}} -->
             <a href="{{ route('profiles.profile', ['user' => $post->user->id]) }}">
-              <img src="{{ asset('images/' . $post->user->icon_image) }}" alt="ユーザーアイコン" width="50">
+              <img src="{{ asset('images/' . $user->icon_image) }}" alt="{{ $user->username }}のアイコン" class="user-icon">
             </a>
 
             <div class="post-content">

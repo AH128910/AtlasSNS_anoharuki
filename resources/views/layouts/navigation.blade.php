@@ -15,9 +15,7 @@
                         <li><a href="/logout">ログアウト</a></li>
                     </ul>
                     </div>
-                    @php
-                    $iconNumber = Auth::user()->id % 7 + 1;
-                    @endphp
+
                     <img src="{{ asset('images/' . Auth::user()->icon_image) }}" alt="ユーザーアイコン" class="user-icon">
                 </div>
 

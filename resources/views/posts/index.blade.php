@@ -5,7 +5,15 @@
     <!-- {{ Auth::id() }} -->
     <div class="post-form">
         {{-- ログインユーザーのアイコンを表示 --}}
-        <img src="{{ asset('images/' . Auth::user()->icon_image) }}" alt="ユーザーアイコン" width="50">
+        <img
+            src="{{ Auth::user()->icon_image
+                ? (Str::startsWith(Auth::user()->icon_image, 'icons/')
+                    ? asset('storage/' . Auth::user()->icon_image)
+                    : asset('images/' . Auth::user()->icon_image))
+                : asset('images/icon.png') }}"
+            alt="ユーザーアイコン"
+            class="user-icon"
+            width="50">
 
 
         {{-- テキストエリア＋エラー表示のラッパー --}}
@@ -35,7 +43,14 @@
     <div class="post">
         {{-- ユーザー情報 --}}
 
-        <img src="{{ asset('images/' . $post->user->icon_image) }}" alt="ユーザーアイコン" width="50">
+        <img
+            src="{{ $post->user->icon_image
+                ? (Str::startsWith($post->user->icon_image, 'icons/')
+                    ? asset('storage/' . $post->user->icon_image)
+                    : asset('images/' . $post->user->icon_image))
+                : asset('images/icon.png') }}"
+            alt="ユーザーアイコン"
+            width="50" class="user-icon">
 
         <div class="post-content">
           <p class="username">{{ $post->user->username }}</p>

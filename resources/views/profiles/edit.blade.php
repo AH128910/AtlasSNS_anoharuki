@@ -1,7 +1,14 @@
 <x-login-layout>
 
 <div class="edit">
-      <img src="{{ asset('images/' . Auth::user()->icon_image) }}" alt="ユーザーアイコン" class="user-icon">
+
+    <img
+      src="{{ $user->icon_image
+          ? (Str::startsWith($user->icon_image, 'icons/')
+              ? asset('storage/' . $user->icon_image)
+              : asset('images/' . $user->icon_image))
+          : asset('images/icon.png') }}"
+      alt="{{ $user->username }}のアイコン" class="user-icon">
 
       @if(session('success'))
           <div class="alert alert-success">
